@@ -1,0 +1,11 @@
+{
+  "name": "DeployServer",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "githubhook": "~0.5.1",
+    "nconf": "~0.6.9",
+    "async": "~0.2.10",
+    "underscore": "~1.6.0"
+  }
+}

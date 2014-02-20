@@ -1,0 +1,8 @@
+[{
+    "name"       : "deploy-server",
+    "script"     : "app/server.js",
+    "error_file" : "app/logs/child-err.log",
+    "out_file"   : "app/logs/child-out.log",
+    "pid_file"   : "app/logs/child.pid",
+    "exec_mode"  : "fork_mode"
+}]
