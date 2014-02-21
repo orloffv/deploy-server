@@ -3,10 +3,14 @@
     "secret": "deploy-server",
     "host": "127.0.0.1",
     "projects": {
-        "project": {
-            "before": [],
-            "after": [],
-            "deploy": ""
+        "project_name": {
+            "variables": {
+                "path": "path_to_project_folder"
+            },
+            "before": ["rsync --delete -av {{path}}/ {{path}}_deploy/", "rsync --delete -av {{path}}/ {{path}}_backup/"],
+            "after": ["rsync --delete -av {{path}}_deploy/ {{path}}/"],
+            "error": ["rsync --delete -av {{path}}_backup/ {{path}}/"],
+            "deploy": "cd {{path}}_deploy && git pull && npm install"
         }
     }
 }

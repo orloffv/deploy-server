@@ -4,5 +4,8 @@
     "error_file" : "app/logs/child-err.log",
     "out_file"   : "app/logs/child-out.log",
     "pid_file"   : "app/logs/child.pid",
-    "exec_mode"  : "fork_mode"
+    "exec_mode"  : "fork_mode",
+    "env": {
+        "NODE_ENV": "production"
+    }
 }]

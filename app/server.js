@@ -1,65 +1,27 @@
-var githubhook = require('githubhook');
-var nconf = require('nconf');
-var path = require('path');
-var async = require('async');
-var _ = require('underscore');
-
-nconf.argv().env();
-var environment = nconf.get('NODE_ENV') ? nconf.get('NODE_ENV') : 'development';
-nconf.file({ file: path.normalize(__dirname + '/config/' + environment + '.json') });
+var
+    githubhook = require('githubhook')
+    deploy = require('./deploy');
 
 var github = githubhook({
-    port: nconf.get('port'),
-    host: nconf.get('host'),
-    secret: nconf.get('secret'),
+    port: deploy.config.get('port'),
+    host: deploy.config.get('host'),
+    secret: deploy.config.get('secret'),
     logger: {
         log: function(message) {
-            console.log(message);
+            deploy.logger.info(message);
         },
         error: function(message) {
-            console.error(message);
+            deploy.logger.error(message);
         }
     }
 });
 
 github.listen();
 
-var projects = nconf.get('projects');
 
-var execCommands = function(commands, callback) {
-    if (!_.isArray(commands)) {
-        commands = [commands];
+github.on('push', function (repo, ref, data) {
+    if (ref === 'master') {
+        deploy.deployProject(repo);
     }
-
-    async.parallel(
-        _.map(commands, function(command) {
-            return function(cb) {
-                exec(command, function(err, result) {
-                    cb(err, result);
-                });
-            };
-        }),
-        callback
-    );
-};
-
-github.on('event', function (repo, ref, data) {
-    if (projects[repo]) {
-        var project = projects[repo];
-        var beforeCommands = function(callback) {
-            execCommands(project.before, callback);
-        };
-
-        var deployCommand = function(callback) {
-            execCommands(project.deploy, callback);
-        };
-
-        var afterCommands = function(callback) {
-            execCommands(project.after, callback);
-        };
-    }
-
-    console.info(repo, ref, data);
 });
-
 
