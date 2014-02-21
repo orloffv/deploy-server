@@ -18,9 +18,8 @@ var github = githubhook({
 
 github.listen();
 
-
 github.on('push', function (repo, ref, data) {
-    if (ref === 'master') {
+    if (!deploy.config.ref || deploy.config.ref === ref) {
         deploy.deployProject(repo);
     }
 });

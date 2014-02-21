@@ -4,6 +4,7 @@
     "host": "127.0.0.1",
     "projects": {
         "project_name": {
+            "ref": "refs/heads/master",
             "variables": {
                 "path": "path_to_project_folder"
             },
