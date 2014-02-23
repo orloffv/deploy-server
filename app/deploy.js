@@ -8,6 +8,8 @@
             _ = require('underscore'),
             exec = require('child_process').exec;
 
+        require('winston-loggly');
+
         config.argv().env();
         var environment = config.get('NODE_ENV') === 'production' ? 'config' : 'development';
         config.file({ file: path.normalize(__dirname + '/config/' + environment + '.json') });
