@@ -55,7 +55,7 @@
                 _.map(commands, function(command) {
                     return function(cb) {
                         command = replaceVariables(command, variables);
-                        logger.info('run command:', command);
+                        logger.debug('run command:', command);
                         exec(replaceVariables(command, variables), function(err, stdout, stderr) {
                             if (!err) {
                                 logger.debug('command:', 'done');

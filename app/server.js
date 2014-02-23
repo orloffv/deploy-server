@@ -8,7 +8,7 @@ var github = githubhook({
     secret: deploy.config.get('secret'),
     logger: {
         log: function(message) {
-            deploy.logger.info(message);
+            deploy.logger.debug(message);
         },
         error: function(message) {
             deploy.logger.error(message);
