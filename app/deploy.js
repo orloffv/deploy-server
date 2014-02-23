@@ -8,21 +8,41 @@
             _ = require('underscore'),
             exec = require('child_process').exec;
 
-        var logger = new winston.Logger({
-            transports: [
-                new winston.transports.Console({
-                    handleExceptions: true,
-                    colorize:   true,
-                    timestamp: true,
-                    level: 'debug'
-                })
-            ],
-            exitOnError: false
-        });
-
         config.argv().env();
         var environment = config.get('NODE_ENV') === 'production' ? 'config' : 'development';
         config.file({ file: path.normalize(__dirname + '/config/' + environment + '.json') });
+
+        var transports = [];
+
+        transports.push(
+            new winston.transports.Console({
+                handleExceptions: true,
+                colorize:   true,
+                timestamp: true,
+                level: 'debug'
+            })
+        );
+
+        if (config.get('loggly')) {
+            transports.push(
+                new winston.transports.Loggly({
+                    subdomain: config.get('loggly:subdomain'),
+                    inputToken: config.get('loggly:inputToken'),
+                    auth: {
+                        "username": config.get('loggly:username'),
+                        "password": config.get('loggly:password')
+                    },
+                    level: 'info',
+                    tags: ['deploy-server']
+                })
+            );
+        }
+
+
+        var logger = new winston.Logger({
+            transports: transports,
+            exitOnError: false
+        });
 
         var projects = config.get('projects');
 
@@ -38,7 +58,7 @@
                         logger.info('run command:', command);
                         exec(replaceVariables(command, variables), function(err, stdout, stderr) {
                             if (!err) {
-                                logger.info('command:', 'done');
+                                logger.debug('command:', 'done');
                             } else {
                                 logger.error('command:', 'error', stderr);
                             }
@@ -90,13 +110,13 @@
                     if (!err) {
                         execCommands(project.after, project.variables, function(err, result) {
                             if (!err) {
-                                logger.info('deploy:', 'done');
+                                logger.info('deploy:', 'done', name);
                             } else {
                                 execCommands(project.error, project.variables);
                             }
                         });
                     } else {
-                        logger.error('deploy:', 'error');
+                        logger.error('deploy:', 'error', name);
                         execCommands(project.error, project.variables);
                     }
                 }

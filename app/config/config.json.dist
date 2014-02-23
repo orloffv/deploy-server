@@ -13,5 +13,11 @@
             "error": ["rsync --delete -av {{path}}_backup/ {{path}}/"],
             "deploy": "cd {{path}}_deploy && git pull && npm install --production"
         }
+    },
+    "loggly": {
+        "subdomain": "",
+        "inputToken": "",
+        "username": "",
+        "password": ""
     }
 }
