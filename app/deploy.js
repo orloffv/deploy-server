@@ -12,16 +12,14 @@
         var environment = config.get('NODE_ENV') === 'production' ? 'config' : 'development';
         config.file({ file: path.normalize(__dirname + '/config/' + environment + '.json') });
 
-        var transports = [];
-
-        transports.push(
+        var transports = [
             new winston.transports.Console({
                 handleExceptions: true,
                 colorize:   true,
                 timestamp: true,
                 level: 'debug'
             })
-        );
+        ];
 
         if (config.get('loggly')) {
             transports.push(
