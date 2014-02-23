@@ -11,7 +11,7 @@
             "before": ["rsync --delete -av {{path}}/ {{path}}_deploy/", "rsync --delete -av {{path}}/ {{path}}_backup/"],
             "after": ["rsync --delete -av {{path}}_deploy/ {{path}}/"],
             "error": ["rsync --delete -av {{path}}_backup/ {{path}}/"],
-            "deploy": "cd {{path}}_deploy && git pull && npm install"
+            "deploy": "cd {{path}}_deploy && git pull && npm install --production"
         }
     }
 }
