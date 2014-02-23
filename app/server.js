@@ -1,5 +1,5 @@
 var
-    githubhook = require('githubhook')
+    githubhook = require('githubhook'),
     deploy = require('./deploy');
 
 var github = githubhook({
